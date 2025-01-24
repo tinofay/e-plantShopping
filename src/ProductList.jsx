@@ -11,7 +11,6 @@ function ProductList() {
     const dispatch = useDispatch();
 
     const cartItems = useSelector((state) => state.cart.items); // Get cart items from Redux store
-    const cartQuantities = useSelector((state) => state.cart.quantities); // Get cart quantities from Redux store
 
     const plantsArray = [
         {
@@ -123,8 +122,12 @@ function ProductList() {
                 <div className="cart">
                     <h1>Your Cart</h1>
                     <div className="cart-items">
-                        {cartItems.map((item, index) => (
-                            <CartItem key={index} item={item} quantity={cartQuantities[item.name]} />
+                        {cartItems.map((item) => (
+                            <CartItem
+                                key={item.name}
+                                item={item}
+                                quantity={item.quantity}
+                            />
                         ))}
                     </div>
                     <button onClick={handleContinueShopping}>Continue Shopping</button>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
+// eslint-disable-next-line react/prop-types
 const CartItem = ({ onContinueShopping }) => {
     const cart = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
@@ -93,7 +94,8 @@ const CartItem = ({ onContinueShopping }) => {
 };
 
 CartItem.propTypes = {
-    onContinueShopping: PropTypes.func.isRequired
+    item: PropTypes.object.isRequired,
+    quantity: PropTypes.number.isRequired
 };
 
 export default CartItem;
