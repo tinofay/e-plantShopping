@@ -6,14 +6,21 @@ export const CartSlice = createSlice({
     items: [], // Initialize items as an empty array
   },
   reducers: {
+    // CartSlice.js - Update addItem reducer
     addItem: (state, action) => {
       const { name, image, cost } = action.payload;
       const costNumber = parseFloat(cost.replace('$', ''));
       const existingItem = state.items.find(item => item.name === name);
+
       if (existingItem) {
-        existingItem.quantity++;
+        existingItem.quantity += 1;
       } else {
-        state.items.push({ name, image, cost: costNumber, quantity: 1 });
+        state.items.push({
+          name,
+          image,
+          cost: costNumber,
+          quantity: 1
+        });
       }
     },
     removeItem: (state, action) => {

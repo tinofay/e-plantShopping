@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
-// eslint-disable-next-line react/prop-types
-const CartItem = ({ onContinueShopping }) => {
+const CartItem = ({ item, quantity }) => {
     const cart = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
 
-    // Calculate total amount for all products in the cart
     const calculateTotalAmount = () => {
-        return cart.reduce((total, item) => total + item.quantity * item.cost, 0);
-    };
-
-    const handleContinueShopping = () => {
-        onContinueShopping(); // Call the function passed from the parent component
+        return cart.reduce((total, item) => {
+            const cost = typeof item.cost === 'string' ?
+                parseFloat(item.cost.replace('$', '')) :
+                item.cost;
+            return total + (item.quantity * cost);
+        }, 0).toFixed(2);
     };
 
     const handleIncrement = (item) => {
@@ -33,9 +32,11 @@ const CartItem = ({ onContinueShopping }) => {
         dispatch(removeItem(item.name));
     };
 
-    // Calculate total cost based on quantity for an item
     const calculateTotalCost = (item) => {
-        return item.quantity * item.cost;
+        const cost = typeof item.cost === 'string' ?
+            parseFloat(item.cost.replace('$', '')) :
+            item.cost;
+        return (item.quantity * cost).toFixed(2);
     };
 
     return (
@@ -47,7 +48,7 @@ const CartItem = ({ onContinueShopping }) => {
                         <img className="cart-item-image" src={item.image} alt={item.name} />
                         <div className="cart-item-details">
                             <div className="cart-item-name">{item.name}</div>
-                            <div className="cart-item-cost">Unit Price: ${item.cost}</div>
+                            <div className="cart-item-cost">Unit Price: ${typeof item.cost === 'string' ? item.cost.replace('$', '') : item.cost}</div>
                             <div className="cart-item-quantity">
                                 <button
                                     className="cart-item-button cart-item-button-dec"
@@ -78,14 +79,7 @@ const CartItem = ({ onContinueShopping }) => {
                 Total Items: {cart.reduce((total, item) => total + item.quantity, 0)}
             </div>
             <div className="continue_shopping_btn">
-                <button className="get-started-button" onClick={handleContinueShopping}>
-                    Continue Shopping
-                </button>
-                <br />
-                <button
-                    className="get-started-button1"
-                    onClick={() => alert('Functionality to be added for future reference')}
-                >
+                <button className="get-started-button1">
                     Checkout
                 </button>
             </div>
@@ -94,7 +88,12 @@ const CartItem = ({ onContinueShopping }) => {
 };
 
 CartItem.propTypes = {
-    item: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
+        cost: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        quantity: PropTypes.number.isRequired
+    }).isRequired,
     quantity: PropTypes.number.isRequired
 };
 
