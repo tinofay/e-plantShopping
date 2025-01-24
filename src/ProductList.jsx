@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './ProductList.css';
 import CartItem from './CartItem';
-import { addItem, getCartItems } from './CartSlice';
+import { addItem } from './CartSlice'; // Corrected import
 import { useDispatch, useSelector } from 'react-redux';
 
 function ProductList() {
